@@ -21,22 +21,44 @@ def _tau(T):
 
     Out::
 
-        |A| x 1 x 1 x |S| x |S|  (1 for newaxis)
-         a             s'    s
+        |A| x  1  x  1  x |S| x |S|  (1 for newaxis)
+         a                 s'    s
     """
     return np.moveaxis(T, [0,1,2], [2,0,1])[:,None,None,:].copy()
+
+
+def _omega(omega):
+    """
+    Reorder the observation probability array for performance.
+
+    In::
+
+        |A| x |S| x |O|
+         a     s'    o
+
+    Out::
+
+        |A| x |O| x  1  x |S|
+         a     o           s'
+    """
+    return np.swapaxes(omega, -2, -1)[:,:,None].copy()
 
 
 class PBVI(object):
     def __init__(self, R, T, omega, discount_gamma):
         self.gamma_ast      = _gamma_ast(R)
-        self.omega          = omega[:,:,None].copy()
+        self.omega          = _omega(omega)
         self.discount_gamma = discount_gamma
         self.tau            = _tau(T)
         self._outs          = collections.defaultdict(dict)
+        self.previous_n_alphas = 0
 
 
     def gamma(self, V_):
+        if self.previous_n_alphas != len(V_):
+            self._outs.clear()
+            self.previous_n_alphas = len(V_)
+
         l = self._outs['gamma']  # l for locals
 
         l['prod1']   = np.multiply(self.omega[:,:,None], V_, out=l.get('prod1'))
@@ -57,7 +79,7 @@ class PBVI(object):
         l['best_alpha_inds']    = np.argmax(l['crossprods'], -1,
                                             out=l.get('best_alpha_inds'))
 
-        (n_as, n_os)    = gamma.shape[0:1]
+        (n_as, n_os)    = gamma.shape[0:2]
 
         # Credits: https://stackoverflow.com/questions/40357335/
         #          numpy-how-to-get-a-max-from-an-argmax-result
@@ -80,4 +102,7 @@ class PBVI(object):
         l['best_as']    = np.argmax(np.squeeze(l['values']), axis=1,
                                     out=l.get('best_as'))
 
-        return E[np.arange(E.shape[0]), l['best_as']]
+        return np.unique(E[np.arange(E.shape[0]), l['best_as']],
+                         axis=0)
+        # The np.unique is the pruning step.
+        # Requires NumPy 1.13.1!
