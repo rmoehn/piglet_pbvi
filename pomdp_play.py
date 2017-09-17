@@ -15,8 +15,9 @@ cT = np.array([[            # s0
                 [0.1, 0.9],     # as
                 [0.9, 0.1]]])   # ag
 
-cR = np.array([[0.0, 1.0],
-               [0.0, 1.0]])
+#               as   ag
+cR = np.array([[0.0, 0.0],      # s0
+               [1.0, 1.0]])     # s1
 
 cO = np.array([[[0.6, 0.4],     # s0 o0 o1
                 [0.4, 0.6]],
@@ -31,12 +32,12 @@ apbvi = pbvi.PBVI(cR, cT, cO, gamma)
 V = np.zeros((1, 2), np.float64)
 
 B = np.array([[0.4, 0.6],
-              [0.6, 0.4]])
+              [0.6, 0.4],
+              [0.2, 0.8],
+              [0.8, 0.2]])
 
-for _ in xrange(8):
+for _ in xrange(9):
     gamma   = apbvi.gamma(V)
     epsilon = apbvi.epsilon(B, gamma)
     V       = apbvi.V(epsilon, B)
-
-
-print V
+    print V
