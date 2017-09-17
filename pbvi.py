@@ -94,11 +94,17 @@ class PBVI(object):
 
         return l['E']
 
-
+    # TODO: See if it makes sense to return the E in a different shape, so we
+    # don't have to do the swapaxes later. (RM 2017-09-18)
     def V(self, E, B):
         l = self._outs['V']
+        E = E.swapaxes(0,1)
 
-        l['values']     = np.matmul(E, B[:,:,None], out=l.get('prod'))
+        # Note: Does anyone know how to short this? Essentially it's a
+        # broadcast matrix-vector multiplication.
+        l['product']    = np.multiply(E, B[:,None,:], out=l.get('product'))
+        l['values']     = np.sum(l['product'], -1, out=l.get('values'))
+
         l['best_as']    = np.argmax(np.squeeze(l['values']), axis=1,
                                     out=l.get('best_as'))
 
