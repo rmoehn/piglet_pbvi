@@ -61,8 +61,9 @@ class PBVI(object):
 
         l = self._outs['gamma']  # l for locals
 
-        l['prod1']   = np.multiply(self.omega[:,:,None], V_, out=l.get('prod1'))
-        l['prod2']   = np.multiply(self.tau, l['prod1'], out=l.get('prod2'))
+        l['prod1']   = np.multiply(self.omega, V_, out=l.get('prod1'))
+        l['prod2']   = np.multiply(self.tau, l['prod1'][...,None],
+                                   out=l.get('prod2'))
         l['sum_s_']  = np.sum(l['prod2'], -1, out=l.get('sum_s_'))
         l['result']  = np.multiply(self.discount_gamma, l['sum_s_'],
                                    out=l.get('result'))
