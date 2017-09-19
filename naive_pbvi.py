@@ -43,4 +43,4 @@ class NaivePBVI(object):
         for b in xrange(B.shape[0]):
             res[b] = E[b, np.argmax(np.dot(E[b], B[b]))]
 
-        return np.squeeze(np.unique(E, axis=0))
+        return np.unique(res, axis=0)
