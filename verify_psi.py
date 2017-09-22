@@ -1,5 +1,8 @@
 import numpy as np
 
+# Note: The names and argument order in this file is not consistent with that in
+# the main files. If you use the code here, adjust it first.
+
 
 def psi_samples(st, at1, T, omega, n_root=100):
     """

@@ -20,18 +20,18 @@ cT = np.array([[            # s0
 cR = np.array([[0.0, 0.0],      # s0
                [1.0, 1.0]])     # s1
 
-#                o0   o1
-cO = np.array([[            # a0
-                [0.6, 0.4],     # s' = s0
-                [0.4, 0.6]],    #      s1
-               [            # a1
-                [0.6, 0.4],     #      s0
-                [0.4, 0.6]]])   #      s1
+#                    o0   o1
+cOmega = np.array([[            # a0
+                    [0.6, 0.4],     # s' = s0
+                    [0.4, 0.6]],    #      s1
+                   [            # a1
+                    [0.6, 0.4],     #      s0
+                    [0.4, 0.6]]])   #      s1
 
-discount_gamma = 1.0
+gamma = 1.0
 
 
-apbvi = pbvi.PBVI(cR, cT, cO, discount_gamma)
+apbvi = pbvi.PBVI(cT, cOmega, cR, gamma)
 
 V = np.zeros((1, 2), np.float64)
 
@@ -44,9 +44,9 @@ b1 = np.linspace(0.1, 0.9, 8)
 B = np.stack([1 - b1, b1], axis=-1)
 
 for _ in xrange(9):
-    gamma   = apbvi.gamma(V)
-    epsilon = apbvi.epsilon(B, gamma)
-    V       = apbvi.V(epsilon, B)
+    Gamma   = apbvi.Gamma(V)
+    Epsi    = apbvi.Epsi(B, Gamma)
+    V       = apbvi.V(Epsi, B)
     print V
 
 fig, ax = plt.subplots()
@@ -55,33 +55,34 @@ for v in V:
 plt.show()
 
 
-anpbvi = naive_pbvi.NaivePBVI(cR, cT, cO, discount_gamma)
+anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
 
 nV = np.zeros((1, 2), np.float64)
+V  = np.zeros((1, 2), np.float64)
 
 for _ in xrange(0):
-    ngamma = anpbvi.gamma(nV)
-    nepsilon = anpbvi.epsilon(B, ngamma)
-    nV = anpbvi.V(nepsilon, B)
+    nGamma  = anpbvi.Gamma(nV)
+    nEpsi   = anpbvi.Epsi(B, nGamma)
+    nV      = anpbvi.V(nEpsi, B)
 
 print "\nV\n", nV
 
-for i in xrange(0):
+for i in xrange(3):
     print "\n== Round %d ==" % i
     print "GAMMA"
-    ngamma = anpbvi.gamma(nV)
-    print ngamma
-    gamma = apbvi.gamma(V)
-    print gamma
+    nGamma = anpbvi.Gamma(nV)
+    print nGamma
+    Gamma = apbvi.Gamma(V)
+    print Gamma
 
     print "EPSILON"
-    nepsilon = anpbvi.epsilon(B, ngamma)
-    print nepsilon
-    epsilon = apbvi.epsilon(B, gamma)
-    print epsilon
+    nEpsi = anpbvi.Epsi(B, nGamma)
+    print nEpsi
+    Epsi = apbvi.Epsi(B, Gamma)
+    print Epsi
 
     print "V"
-    nV = anpbvi.V(nepsilon, B)
+    nV = anpbvi.V(nEpsi, B)
     print nV
-    V = apbvi.V(epsilon, B)
+    V = apbvi.V(Epsi, B)
     print V
