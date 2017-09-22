@@ -44,13 +44,36 @@ def _omega(omega):
     return np.swapaxes(omega, -2, -1)[:,:,None].copy()
 
 
+# TODO: Use different names for external and internal omega. (RM 2017-09-22)
+# Note: Calculating this with little use of NumPy for better readability and
+# it's initialization code, so performance doesn't matter.
+# TODO: Make n_a/n_as etc. consistent. (RM 2017-09-22)
+def _psi(T, omega):
+    """
+    Psi(st, at+1, ot+1) = P(ot+1|at, at+1)
+    """
+    (n_a, n_s, n_o) = omega.shape
+    res = np.empty((n_s, n_a, n_o))
+    for (st, at1, ot1), _ in np.ndenumerate(res):
+        res[st, at1, ot1] = sum([T[st, at1, st1] * omega[at1, st1, ot1]
+                                 for st1 in xrange(n_s)])
+
+    return res
+
+
+
+
+# pylint: disable=too-many-instance-attributes
+# I've thoughta about these too-many's and I think it's still okay.
 class PBVI(object):
-    def __init__(self, R, T, omega, discount_gamma):
+    # pylint: disable=too-many-arguments
+    def __init__(self, R, T, omega, discount_gamma, seed=None):
         self.gamma_ast      = _gamma_ast(R)
         self.omega          = _omega(omega)
         self.discount_gamma = discount_gamma
         self.tau            = _tau(T)
         self._outs          = collections.defaultdict(dict)
+        self.random         = np.random.RandomState(seed)
         self.previous_n_alphas = 0
 
 
@@ -113,3 +136,13 @@ class PBVI(object):
                          axis=0)
         # The np.unique is the pruning step.
         # Requires NumPy 1.13.1!
+
+
+    def expanded_B(self, B):
+        n_as = self._tau.shape[0]
+        n_ss = B.shape[1]
+
+        s_samples = np.array([self.random.choice(n_ss, size=n_as, replace=True,
+                                                 p=b) 
+                              for b in B])
+
