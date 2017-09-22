@@ -119,7 +119,6 @@ class PBVI(object):
         return l['result']
 
 
-    # TODO: Change l['Epsi'] to l['result']
     def Epsi(self, B, Gamma):
         l = self._outs['Epsi']
 
@@ -136,11 +135,12 @@ class PBVI(object):
                                 l['best_alpha_inds']]
 
         # Gamma_a_b for each a and b
-        l['Epsi'] = np.sum(best_per_o, 1, out=l.get('Epsi'))  # not yet Epsi
-        l['Epsi'] += self._Gamma_ast   # Now it's Epsi.
+        l['result'] = np.sum(best_per_o, 1, out=l.get('result'))  # Not yet Epsi.
+        l['result'] += self._Gamma_ast  # Now it's Epsi.
         # If this is slow, try E.swapaxes(…) += Gamma_ast (Gamma_ast unmodified)
 
-        return l['Epsi']
+        return l['result']
+
 
     # TODO: See if it makes sense to return the E in a different shape, so we
     # don't have to do the swapaxes later. (RM 2017-09-18)
