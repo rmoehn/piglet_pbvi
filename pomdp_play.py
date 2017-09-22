@@ -43,46 +43,47 @@ B = np.array([[0.4, 0.6],
 b1 = np.linspace(0.1, 0.9, 8)
 B = np.stack([1 - b1, b1], axis=-1)
 
-for _ in xrange(9):
-    Gamma   = apbvi.Gamma(V)
-    Epsi    = apbvi.Epsi(B, Gamma)
-    V       = apbvi.V(Epsi, B)
-    print V
+if __name__ == '__main__':
+    for _ in xrange(9):
+        Gamma   = apbvi.Gamma(V)
+        Epsi    = apbvi.Epsi(B, Gamma)
+        V       = apbvi.V(Epsi, B)
+        print V
 
-fig, ax = plt.subplots()
-for v in V:
-    ax.plot([0, 1], v)
-plt.show()
+    fig, ax = plt.subplots()
+    for v in V:
+        ax.plot([0, 1], v)
+    plt.show()
 
 
-anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
+    anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
 
-nV = np.zeros((1, 2), np.float64)
-V  = np.zeros((1, 2), np.float64)
+    nV = np.zeros((1, 2), np.float64)
+    V  = np.zeros((1, 2), np.float64)
 
-for _ in xrange(0):
-    nGamma  = anpbvi.Gamma(nV)
-    nEpsi   = anpbvi.Epsi(B, nGamma)
-    nV      = anpbvi.V(nEpsi, B)
+    for _ in xrange(0):
+        nGamma  = anpbvi.Gamma(nV)
+        nEpsi   = anpbvi.Epsi(B, nGamma)
+        nV      = anpbvi.V(nEpsi, B)
 
-print "\nV\n", nV
+    print "\nV\n", nV
 
-for i in xrange(3):
-    print "\n== Round %d ==" % i
-    print "GAMMA"
-    nGamma = anpbvi.Gamma(nV)
-    print nGamma
-    Gamma = apbvi.Gamma(V)
-    print Gamma
+    for i in xrange(3):
+        print "\n== Round %d ==" % i
+        print "GAMMA"
+        nGamma = anpbvi.Gamma(nV)
+        print nGamma
+        Gamma = apbvi.Gamma(V)
+        print Gamma
 
-    print "EPSILON"
-    nEpsi = anpbvi.Epsi(B, nGamma)
-    print nEpsi
-    Epsi = apbvi.Epsi(B, Gamma)
-    print Epsi
+        print "EPSILON"
+        nEpsi = anpbvi.Epsi(B, nGamma)
+        print nEpsi
+        Epsi = apbvi.Epsi(B, Gamma)
+        print Epsi
 
-    print "V"
-    nV = anpbvi.V(nEpsi, B)
-    print nV
-    V = apbvi.V(Epsi, B)
-    print V
+        print "V"
+        nV = anpbvi.V(nEpsi, B)
+        print nV
+        V = apbvi.V(Epsi, B)
+        print V
