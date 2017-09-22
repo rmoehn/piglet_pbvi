@@ -62,7 +62,6 @@ def _Omega(Omega):
 
 # Note: Calculating this with little use of NumPy for better readability and
 # it's initialization code, so performance doesn't matter.
-# TODO: Make n_a/n_as etc. consistent. (RM 2017-09-22)
 def cPsi(T, Omega):
     """
     Psi(st, at+1, ot+1) = P(ot+1 | at, at+1)
@@ -74,6 +73,9 @@ def cPsi(T, Omega):
                                  for st1 in xrange(n_s)])
 
     return res
+
+
+Size = collections.namedtuple("Size", ['s', 'a', 'o'])
 
 
 # pylint: disable=too-many-instance-attributes
@@ -96,6 +98,8 @@ class PBVI(object):
         self._outs          = collections.defaultdict(dict)
         self.random         = np.random.RandomState(seed)
         self.previous_n_alphas = 0
+        n_s, n_a, n_o       = Omega.shape
+        self.n              = Size(s=n_s, a=n_a, o=n_o)
 
 
     def Gamma(self, V_):
@@ -125,12 +129,10 @@ class PBVI(object):
         l['best_alpha_inds']    = np.argmax(l['crossprods'], -1,
                                             out=l.get('best_alpha_inds'))
 
-        (n_as, n_os)    = Gamma.shape[0:2]
-
         # Credits: https://stackoverflow.com/questions/40357335/
         #          numpy-how-to-get-a-max-from-an-argmax-result
-        best_per_o      = Gamma[np.arange(n_as)[:,None,None],
-                                np.arange(n_os)[None,:,None],
+        best_per_o      = Gamma[np.arange(self.n.a)[:,None,None],
+                                np.arange(self.n.o)[None,:,None],
                                 l['best_alpha_inds']]
 
         # Gamma_a_b for each a and b
@@ -161,10 +163,7 @@ class PBVI(object):
 
 
     def expanded_B(self, B):
-        n_as = self._T.shape[0]
-        n_ss = B.shape[1]
-
-        s_samples = np.array([self.random.choice(n_ss, size=n_as, replace=True,
-                                                 p=b) 
+        s_samples = np.array([self.random.choice(self.n.s, size=self.n.a,
+                                                 replace=True, p=b) 
                               for b in B])
 
