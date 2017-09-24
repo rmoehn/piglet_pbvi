@@ -21,6 +21,13 @@ import collections
 import numpy as np
 
 
+# Credits: https://stackoverflow.com/a/21032099/5091738
+def pnormalized(a, axis=-1):
+    asum            = np.atleast_1d(np.sum(a, axis=axis))
+    asum[asum == 0] = 1
+    return a / np.expand_dims(asum, axis)
+
+
 def _Gamma_ast(R):
     return R.T[:,None,:].copy()
     # Copy in order to reorder in memory.
@@ -171,7 +178,24 @@ class PBVI(object):
 
 
     def expanded_B(self, B):
-        s_samples = np.array([self.random.choice(self.n.s, size=self.n.a,
-                                                 replace=True, p=b) 
-                              for b in B])
+        # o_prob[i_b, at+1, ot+1] = P(ot+1 | b, at+1)
+        o_prob = np.rollaxis(np.matmul(B, self._Psi), 0, 3)
+        # The rollaxis restores a convenient shape.
 
+        o_samples = np.empty((len(B), self.n.a), dtype=np.int32)
+        for (i_b, a), _ in np.ndenumerate(o_samples):
+            o_samples[i_b, a] = self.random.choice(self.n.o, p=o_prob[i_b, a])
+
+        B_ = []
+        for i_b, b in enumerate(B):
+            Tb_prod     = np.tensordot(self.i.T, b, (0, 0))
+            omegas      = self.i.Omega[np.arange(self.n.a), :, o_samples[i_b]]
+            b_s         = pnormalized(Tb_prod * omegas, axis=1)
+            l1_dists    = np.linalg.norm(b_s[:,None] - B, ord=1, axis=2)
+            min_dists   = np.amin(l1_dists, axis=-1)
+            max_min_a   = np.argmax(min_dists, axis=-1)
+
+            if min_dists[max_min_a] > 0:
+                B_.append(b_s[max_min_a])
+
+        return np.vstack([B, B_])
