@@ -50,3 +50,30 @@ class NaivePBVI(object):
             res[b] = Epsi[b, np.argmax(np.dot(Epsi[b], B[b]))]
 
         return np.unique(res, axis=0)
+
+
+    def _bayes_update(self, b, a, o):
+        b_ = np.empty_like(b)
+        for s_ in xrange(len(b_)):
+            b_[s_] = self.gamma * self.Omega[a,s_,o] * np.dot(self.T[:,a,s_], b)
+
+        return b_
+
+
+    def expanded_B(self, B):
+        s_b_a   = np.array([[np.choice(self.n.s, p=b) for _ in xrange(self.n.a)]
+                            for b in B])
+
+        s__b_a  = np.array([[np.choice(self.n.s, p=self.T[s_b_a[i_b,a], a])
+                             for a in xrange(self.n.a)]
+                            for i_b in xrange(len(B))])
+
+        o_b_a   = np.array([[np.choice(self.n.o, p=self.Omega[a, s__b_a[i_b,a]])
+                             for a in xrange(self.n.a)]
+                            for i_b in xrange(len(B))])
+
+        b__b_a  = np.array([[self._bayes_update(b, a, o_b_a[i_b, a])
+                             for a in xrange(self.n.a)]
+                            for i_b, b in enumerate(B)])
+
+        # Write up mathematically what we want. Then translate.
