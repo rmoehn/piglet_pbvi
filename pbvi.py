@@ -80,7 +80,8 @@ def _Psi(T, Omega):
     return res
 
 
-Size = collections.namedtuple("Size", ['s', 'a', 'o'])
+Input   = collections.namedtuple("Input", ["T", "Omega", "R", "gamma"])
+Size    = collections.namedtuple("Size", ['s', 'a', 'o'])
 
 
 # pylint: disable=too-many-instance-attributes
@@ -96,9 +97,10 @@ Size = collections.namedtuple("Size", ['s', 'a', 'o'])
 class PBVI(object):
     # pylint: disable=too-many-arguments
     def __init__(self, T, Omega, R, gamma, seed=None):
+        # Unmodified inputs
+        self.i              = Input(T, Omega, R, gamma)
         self._Gamma_ast     = _Gamma_ast(R)
         self._Omega         = _Omega(Omega)
-        self.gamma          = gamma
         self._T             = _T(T)
         self._Psi           = _Psi(T, Omega)
         self._outs          = collections.defaultdict(dict)
@@ -119,7 +121,7 @@ class PBVI(object):
         l['prod2']   = np.multiply(self._T, l['prod1'][...,None],
                                    out=l.get('prod2'))
         l['sum_s_']  = np.sum(l['prod2'], 3, out=l.get('sum_s_'))
-        l['result']  = np.multiply(self.gamma, l['sum_s_'],
+        l['result']  = np.multiply(self.i.gamma, l['sum_s_'],
                                    out=l.get('result'))
 
         return l['result']
