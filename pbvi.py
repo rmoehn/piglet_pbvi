@@ -62,14 +62,19 @@ def _Omega(Omega):
 
 # Note: Calculating this with little use of NumPy for better readability and
 # it's initialization code, so performance doesn't matter.
-def cPsi(T, Omega):
+def _Psi(T, Omega):
     """
-    Psi(st, at+1, ot+1) = P(ot+1 | at, at+1)
+    Psi(st, at+1, ot+1) = P(ot+1 | st, at+1)
+
+    Note that for easier calculation further down, the shape is as follows::
+
+        |O| x |S| x |A|
+        ot+1   st   at+1
     """
     (n_a, n_s, n_o) = Omega.shape
-    res = np.empty((n_s, n_a, n_o))
-    for (st, at1, ot1), _ in np.ndenumerate(res):
-        res[st, at1, ot1] = sum([T[st, at1, st1] * Omega[at1, st1, ot1]
+    res = np.empty((n_o, n_s, n_a))
+    for (ot1, st, at1), _ in np.ndenumerate(res):
+        res[ot1, st, at1] = sum([T[st, at1, st1] * Omega[at1, st1, ot1]
                                  for st1 in xrange(n_s)])
 
     return res
@@ -95,6 +100,7 @@ class PBVI(object):
         self._Omega         = _Omega(Omega)
         self.gamma          = gamma
         self._T             = _T(T)
+        self._Psi           = _Psi(T, Omega)
         self._outs          = collections.defaultdict(dict)
         self.random         = np.random.RandomState(seed)
         self.previous_n_alphas = 0
