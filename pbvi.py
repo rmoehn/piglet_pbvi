@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+# TODO: Comment all the NumPy calculations. (RM 2017-09-25)
 # TODO: Finish those naming conventions. (RM 2017-09-23)
 """
 
@@ -117,6 +118,12 @@ class PBVI(object):
         self.n              = Size(s=n_s, a=n_a, o=n_o)
 
 
+    # MAYBE TODO: It might be possible to do those multiply and sum stuff with
+    # tensordot or einsum. (RM 2017-09-24)
+    # TODO: See whether the use of out= makes sense at all. Does V_ often stay
+    # the same for several steps? When does the array copying start to impact
+    # performance? According to the conclusions, remove the out= stuff here or
+    # introduce it in other places. (RM 2017-09-25)
     def Gamma(self, V_):
         if self.previous_n_alphas != len(V_):
             self._outs.clear()
@@ -157,8 +164,8 @@ class PBVI(object):
         return l['result']
 
 
-    # TODO: See if it makes sense to return the E in a different shape, so we
-    # don't have to do the swapaxes later. (RM 2017-09-18)
+    # MAYBE TODO: See if it makes sense to return the E in a different shape, so
+    # we don't have to do the swapaxes later. (RM 2017-09-18)
     def V(self, Epsi, B):
         l = self._outs['V']
         Epsi = Epsi.swapaxes(0,1)
@@ -177,6 +184,12 @@ class PBVI(object):
         # Requires NumPy 1.13.1!
 
 
+    # MAYBE TODO: Use broadcasting for calculating the Tb_prod etc. for all bs.
+    # (RM 2017-09-25)
+    # TODO: Check whether the min_dists[…] > 0 makes sense numerically. If it's
+    # close to 0 relative to the size of the space we're dealing with, it might
+    # make sense to not include the point in B' after all. (RM 2017-09-25)
+    # TODO: Factor out the sampling of the os for abstraction. (RM 2017-09-25)
     def expanded_B(self, B):
         # o_prob[i_b, at+1, ot+1] = P(ot+1 | b, at+1)
         o_prob = np.rollaxis(np.matmul(B, self._Psi), 0, 3)
