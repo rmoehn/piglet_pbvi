@@ -44,7 +44,26 @@ b1 = np.linspace(0.1, 0.9, 8)
 B = np.stack([1 - b1, b1], axis=-1)
 
 if __name__ == '__main__':
-    for _ in xrange(9):
+
+    apbvi = pbvi.PBVI(cT, cOmega, cR, gamma)
+    B = np.array([[0.5, 0.5]])
+
+    for _ in xrange(4):
+        B = apbvi.expanded_B(B)
+        print B
+
+    print 'NAIVE'
+
+    anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
+    nB = np.array([[0.5, 0.5]])
+
+    for _ in xrange(4):
+        nB = anpbvi.expanded_B(nB)
+        print nB
+
+    print len(B), len(nB)
+
+    for _ in xrange(0):
         Gamma   = apbvi.Gamma(V)
         Epsi    = apbvi.Epsi(B, Gamma)
         V       = apbvi.V(Epsi, B)
@@ -54,7 +73,6 @@ if __name__ == '__main__':
     for v in V:
         ax.plot([0, 1], v)
     plt.show()
-
 
     anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
 
@@ -68,7 +86,7 @@ if __name__ == '__main__':
 
     print "\nV\n", nV
 
-    for i in xrange(3):
+    for i in xrange(0):
         print "\n== Round %d ==" % i
         print "GAMMA"
         nGamma = anpbvi.Gamma(nV)
