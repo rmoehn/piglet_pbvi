@@ -199,16 +199,16 @@ class PBVI(object):
         for (i_b, a), _ in np.ndenumerate(o_samples):
             o_samples[i_b, a] = self.random.choice(self.n.o, p=o_prob[i_b, a])
 
-        B_ = []
+        B_ = list(B)
         for i_b, b in enumerate(B):
             Tb_prod     = np.tensordot(self.i.T, b, (0, 0))
             omegas      = self.i.Omega[np.arange(self.n.a), :, o_samples[i_b]]
             b_s         = pnormalized(Tb_prod * omegas, axis=1)
-            l1_dists    = np.linalg.norm(b_s[:,None] - B, ord=1, axis=2)
+            l1_dists    = np.linalg.norm(b_s[:,None] - B_, ord=1, axis=2)
             min_dists   = np.amin(l1_dists, axis=-1)
             max_min_a   = np.argmax(min_dists, axis=-1)
 
             if min_dists[max_min_a] > 0:
                 B_.append(b_s[max_min_a])
 
-        return np.vstack([B, B_])
+        return np.array(B_)
