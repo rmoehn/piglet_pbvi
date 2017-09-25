@@ -57,18 +57,21 @@ class NaivePBVI(object):
         for s_ in xrange(len(b_)):
             b_[s_] = self.gamma * self.Omega[a,s_,o] * np.dot(self.T[:,a,s_], b)
 
-        return b_
+        return b_ / np.sum(b_)
 
 
     def expanded_B(self, B):
-        s_b_a   = np.array([[np.choice(self.n.s, p=b) for _ in xrange(self.n.a)]
+        s_b_a   = np.array([[np.random.choice(self.n.s, p=b)
+                             for _ in xrange(self.n.a)]
                             for b in B])
 
-        s__b_a  = np.array([[np.choice(self.n.s, p=self.T[s_b_a[i_b,a], a])
+        s__b_a  = np.array([[np.random.choice(self.n.s,
+                                              p=self.T[s_b_a[i_b,a], a])
                              for a in xrange(self.n.a)]
                             for i_b in xrange(len(B))])
 
-        o_b_a   = np.array([[np.choice(self.n.o, p=self.Omega[a, s__b_a[i_b,a]])
+        o_b_a   = np.array([[np.random.choice(self.n.o,
+                                              p=self.Omega[a, s__b_a[i_b,a]])
                              for a in xrange(self.n.a)]
                             for i_b in xrange(len(B))])
 
@@ -76,4 +79,17 @@ class NaivePBVI(object):
                              for a in xrange(self.n.a)]
                             for i_b, b in enumerate(B)])
 
-        # Write up mathematically what we want. Then translate.
+        b_s = list(B)
+        for i_b, _ in enumerate(B):
+            min_dist = [min(np.linalg.norm(b__b_a[i_b, a] - b, ord=1)
+                            for b in b_s)
+                        for a in xrange(self.n.a)]
+            # Problematic naming here, because suddenly we have both bs and b's
+            # in one list, b_s.
+
+            max_a = np.argmax(min_dist)
+
+            if min_dist[max_a] != 0:
+                b_s.append(b__b_a[i_b, max_a])
+
+        return np.array(b_s)
