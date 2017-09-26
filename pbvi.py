@@ -114,6 +114,7 @@ class PBVI(object):
         self._outs          = collections.defaultdict(dict)
         self.random         = np.random.RandomState(seed)
         self.previous_n_alphas = 0
+        self.previous_n_bs     = 0
         n_s, n_a, n_o       = Omega.shape
         self.n              = Size(s=n_s, a=n_a, o=n_o)
 
@@ -125,7 +126,7 @@ class PBVI(object):
     # performance? According to the conclusions, remove the out= stuff here or
     # introduce it in other places. (RM 2017-09-25)
     def Gamma(self, V_):
-        if self.previous_n_alphas != len(V_):
+        if True or self.previous_n_alphas != len(V_):
             self._outs.clear()
             self.previous_n_alphas = len(V_)
 
@@ -142,6 +143,10 @@ class PBVI(object):
 
 
     def Epsi(self, B, Gamma):
+        if True or self.previous_n_bs != len(B):
+            self._outs.clear()
+            self.previous_n_bs = len(B)
+
         l = self._outs['Epsi']
 
         # alpha · b for all a, o, b
