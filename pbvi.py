@@ -25,13 +25,13 @@ import numpy as np
 def run(apbvi, V, B, n_expansions, horizon):
     for _ in xrange(n_expansions):
         for _ in xrange(horizon):
-            Gamma   = apbvi.Gamma(V)
-            Epsi    = apbvi.Epsi(B, Gamma)
-            V       = apbvi.V(Epsi, B)
+            Gamma       = apbvi.Gamma(V)
+            Epsi        = apbvi.Epsi(B, Gamma)
+            V, best_as  = apbvi.V(Epsi, B)
 
         B = apbvi.expanded_B(B)
 
-    return V
+    return V, best_as
 
 
 # Credits: https://stackoverflow.com/a/21032099/5091738
@@ -195,10 +195,12 @@ class PBVI(object):
         l['best_as']    = np.argmax(np.squeeze(l['values']), axis=1,
                                     out=l.get('best_as'))
 
-        return np.unique(Epsi[np.arange(Epsi.shape[0]), l['best_as']],
-                         axis=0)
+        rV, a_inds = np.unique(Epsi[np.arange(Epsi.shape[0]), l['best_as']],
+                               return_index=True, axis=0)
         # The np.unique is the pruning step.
-        # Requires NumPy 1.13.1!
+        # Requires NumPy >=1.13.0!
+
+        return rV, l['best_as'][a_inds]
 
 
     # MAYBE TODO: Use broadcasting for calculating the Tb_prod etc. for all bs.
