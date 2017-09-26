@@ -22,6 +22,18 @@ import collections
 import numpy as np
 
 
+def run(apbvi, V, B, n_expansions, horizon):
+    for _ in xrange(n_expansions):
+        for _ in xrange(horizon):
+            Gamma   = apbvi.Gamma(V)
+            Epsi    = apbvi.Epsi(B, Gamma)
+            V       = apbvi.V(Epsi, B)
+
+        B = apbvi.expanded_B(B)
+
+    return V
+
+
 # Credits: https://stackoverflow.com/a/21032099/5091738
 def pnormalized(a, axis=-1):
     asum            = np.atleast_1d(np.sum(a, axis=axis))
