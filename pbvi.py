@@ -34,6 +34,10 @@ def run(apbvi, V, B, n_expansions, horizon):
     return V, best_as
 
 
+def best_action(b, V, best_as):
+    return best_as[np.argmax(np.dot(V, b))]
+
+
 # Credits: https://stackoverflow.com/a/21032099/5091738
 def pnormalized(a, axis=-1):
     asum            = np.atleast_1d(np.sum(a, axis=axis))
