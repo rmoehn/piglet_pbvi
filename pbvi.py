@@ -185,6 +185,8 @@ class PBVI(object):
         return l['result']
 
 
+    # TODO: Somehow it doesn't accept when B contains only one vector. Fix that.
+    # (RM 2017-09-27)
     # MAYBE TODO: See if it makes sense to return the E in a different shape, so
     # we don't have to do the swapaxes later. (RM 2017-09-18)
     def V(self, Epsi, B):
