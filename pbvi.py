@@ -1,4 +1,13 @@
 # -*- encoding: utf-8 -*-
+"""
+Point-based Value Iteration for POMDPs
+
+An implementation of:
+
+[1] Joelle Pineau, Geoffrey Gordon, Sebastian Thrun. Point-based value
+    iteration: An anytime algorithm for POMDPs. In IJCAI, 2003.
+    (http://ri.cmu.edu/pub_files/pub4/pineau_joelle_2003_3/pineau_joelle_2003_3.pdf)
+"""
 
 # TODO: Comment all the NumPy calculations. (RM 2017-09-25)
 # TODO: Finish those naming conventions. (RM 2017-09-23)
