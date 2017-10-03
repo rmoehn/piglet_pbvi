@@ -18,6 +18,7 @@ Examples:
 """
 
 import collections
+import math
 
 import numpy as np
 
@@ -133,6 +134,24 @@ class PBVI(object):
         self.previous_n_bs     = 0
         n_s, n_a, n_o       = Omega.shape
         self.n              = Size(s=n_s, a=n_a, o=n_o)
+
+
+    def horizon_for_infinite(self, epsi=None):
+        """
+        Return a horizon to use for infinite-horizon problems
+
+        This is described at the end of section 3.1 of the PBVI paper [1].
+        """
+        if not epsi:
+            epsi = 0.01 * np.amin( np.abs(self.i.R) )
+            # Not in the paper, but I think it's reasonable.
+
+        r_min = np.amin(self.i.R)
+        r_max = np.amax(self.i.R)
+
+        return (epsi,
+                int(math.ceil(
+                        math.log(epsi / (r_max - r_min), self.i.gamma) )))
 
 
     # MAYBE TODO: It might be possible to do those multiply and sum stuff with
