@@ -35,18 +35,22 @@ apbvi = pbvi.PBVI(cT, cOmega, cR, gamma)
 
 V = np.zeros((1, 2), np.float64)
 
-B = np.array([[0.4, 0.6],
-              [0.6, 0.4],
-              [0.2, 0.8],
-              [0.8, 0.2]])
+B = np.array([[0.5, 0.5],
+              [0.5, 0.5]])
 
 b1 = np.linspace(0.1, 0.9, 8)
 B = np.stack([1 - b1, b1], axis=-1)
 
 if __name__ == '__main__':
+    V = pbvi.run(apbvi, V, B, 5, 4)
+    fig, ax = plt.subplots()
+    for v in V:
+        ax.plot([0, 1], v)
+    plt.show()
+
 
     apbvi = pbvi.PBVI(cT, cOmega, cR, gamma)
-    B = np.array([[0.5, 0.5]])
+    B = np.array([[0.7, 0.3]])
 
     for _ in xrange(4):
         B = apbvi.expanded_B(B)
@@ -55,9 +59,9 @@ if __name__ == '__main__':
     print 'NAIVE'
 
     anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
-    nB = np.array([[0.5, 0.5]])
+    nB = np.array([[0.7, 0.3]])
 
-    for _ in xrange(4):
+    for _ in xrange(0):
         nB = anpbvi.expanded_B(nB)
         print nB
 
@@ -68,11 +72,6 @@ if __name__ == '__main__':
         Epsi    = apbvi.Epsi(B, Gamma)
         V       = apbvi.V(Epsi, B)
         print V
-
-    fig, ax = plt.subplots()
-    for v in V:
-        ax.plot([0, 1], v)
-    plt.show()
 
     anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
 
