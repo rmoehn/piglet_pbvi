@@ -141,7 +141,7 @@ class PBVI(object):
         self.random         = np.random.RandomState(seed)
         self.previous_n_alphas = 0
         self.previous_n_bs     = 0
-        n_s, n_a, n_o       = Omega.shape
+        n_a, n_s, n_o       = Omega.shape
         self.n              = Size(s=n_s, a=n_a, o=n_o)
 
 
