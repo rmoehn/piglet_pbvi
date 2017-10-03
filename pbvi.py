@@ -13,7 +13,7 @@ An implementation of:
 # TODO: Finish those naming conventions. (RM 2017-09-23)
 """
 
-Naming conventions
+Naming conventions (incomplete and partially wrong)
 
 * Names for matrices that represent important parts of the problem start with a
   capital letter.
@@ -186,6 +186,8 @@ class PBVI(object):
         return l['result']
 
 
+    # TODO: Already here problems arise when B contains only one vector. Fix
+    # that. (RM 2017-10-04)
     def Epsi(self, B, Gamma):
         if True or self.previous_n_bs != len(B):
             self._outs.clear()
