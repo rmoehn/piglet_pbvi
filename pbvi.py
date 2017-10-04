@@ -152,7 +152,8 @@ class PBVI(object):
         This is described at the end of section 3.1 of the PBVI paper [1].
         """
         if not epsi:
-            epsi = 0.01 * np.amin( np.abs(self.i.R) )
+            abs_rs  = np.abs(self.i.R).flatten()
+            epsi    = 0.01 * np.amin( abs_rs[abs_rs > 0] )
             # Not in the paper, but I think it's reasonable.
 
         r_min = np.amin(self.i.R)
