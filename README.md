@@ -37,3 +37,9 @@ To do
   resulting rewards with those from the PBVI paper. This might turn up defects
   in my implementation or performance problems.
 - Fix any defects or performance problems.
+
+
+License
+-------
+
+See [LICENSE.txt](LICENSE.txt).
