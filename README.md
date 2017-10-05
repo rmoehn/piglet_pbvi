@@ -13,17 +13,18 @@ An anytime algorithm for POMDPs. In IJCAI,
 Done
 ----
 
-- Implement PBVI.
-- Implement a naive version that is slower, but easier to read.
-- Test it on a two-state problem from AIMA. Compare value function with AIMA. –
-  Looks good.
-- Test it on the [Tiger95](http://www.pomdp.org/examples/) problem. Compare
-  value function with the result of
+- Implement [PBVI](pbvi.py).
+- Implement a [naive version](naive_pbvi.py) that is slower, but easier to read.
+- [Test](pomdp_play.py) them on a two-state problem from AIMA. Compare value
+  function with AIMA. – Looks good.
+- [Test](pomdp_test.py) it on the [Tiger95](http://www.pomdp.org/examples/)
+  POMDP. Compare value function with the result of
   [pomdp-solve](http://www.pomdp.org/code/index.html). – Looks okay. pomdp-solve
   returns a value function with more segments, but the policy is the same, I
   think.
 - Make a [tool](https://github.com/rmoehn/pomdp2json) to convert from Anthony
   Cassandra's POMDP file format to JSON.
+
 
 To do
 -----
