@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 # -*- encoding: utf-8 -*-
 
 import json
@@ -35,8 +36,9 @@ def load_pomdp(pomdp_json_path):
     return pbvi.generator(apbvi, V0, b0, horizon)
 
 
-pbvi_gen = load_pomdp("tiger.95.POMDP.json")
+# Run an example
+if __name__ == '__main__':
+    pbvi_gen = load_pomdp("pomdp_defs/tiger.95.POMDP.json")
 
-
-for _ in xrange(10):
-    print next(pbvi_gen)
+    for _ in xrange(10):
+        print next(pbvi_gen)
