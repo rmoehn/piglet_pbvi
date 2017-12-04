@@ -44,6 +44,53 @@ To do
 - Turn this into a Python package and upload to PyPi.
 
 
+Known problems
+--------------
+
+### ValueError: zero-size array to reduction operation minimum which has no identity
+
+Brilliant exception from NumPy, isn't it?
+
+Likely cause: you're trying to load `X.POMPD.json` with
+`piglet_pomdp.json_pomdp.load_pomdp`, but the reward function defined by the
+original `X.POMDP` depended not only on the action and state before the action.
+
+Explanation: PBVI, as defined in the [article](#pbvi-article), solves POMDPs
+where the reward function depends only on the action and the state before the
+action, R(st, at). When you use `pomdp2json.py` to convert a file that doesn't
+stick to that restriction, it will produce a POMDP.json file that is
+incompatible with piglet_pomdp. (To detect incompatible input files and warn the
+user is on the to-do list.) piglet_pomdp misbehaves when it receives
+incompatible input.
+
+Solution: In general, there is no easy way to convert a POMDP with a R(st, at,
+st+1, ot+1) reward function to a POMDP with a R(st, at) reward function. There
+might be a sophisticated way that I don't know. But there are also easy cases
+where you can fiddle with the original POMDP file. For example, `hallway.POMDP`
+defines this reward function:
+
+```
+# Rewards
+# (R: <action> : <start-state> : <end-state> : <observation> %f)
+R: * : * : 56 : * 1.000000
+R: * : * : 57 : * 1.000000
+R: * : * : 58 : * 1.000000
+R: * : * : 59 : * 1.000000
+```
+
+If you swap columns like this:
+
+```
+R: * : 56 : * : * 1.000000
+R: * : 57 : * : * 1.000000
+R: * : 58 : * : * 1.000000
+R: * : 59 : * : * 1.000000
+```
+
+Then the POMDP will be compatible with piglet_pbvi. Is it the same as the
+original? Maybe not. But I guess it's almost the same.
+
+
 Why?
 ----
 
