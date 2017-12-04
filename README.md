@@ -34,7 +34,9 @@ To do
   segments than pomdp-solve on Tiger95.
 - Make an OpenAI Gym environment that can run most POMDPs specified in Anthony
   Cassandra's POMDP file format converted to JSON. ‘Most’ means that the reward
-  function will be limited to depend on the start state and action.
+  function will be limited to depend on the action and the state before taking
+  the action.
+- Maybe make it easier to obtain converted POMDP files.
 - Run my implementation on the Hallway and Hallway2 POMDPs and compare the
   resulting rewards with those from the PBVI paper. This might turn up defects
   in my implementation or performance problems.
