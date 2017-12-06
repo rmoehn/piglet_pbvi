@@ -8,18 +8,57 @@ algorithm from:
 <a href="#pbvi-article"></a>
 [Joelle Pineau, Geoffrey Gordon, Sebastian Thrun. Point-based value iteration:
 An anytime algorithm for POMDPs. In IJCAI,
-2003.](http://ri.cmu.edu/pub_files/pub4/pineau_joelle_2003_3/pineau_joelle_2003_3.pdf)
+2003.](https://www.ri.cmu.edu/pub_files/pub4/pineau_joelle_2003_3/pineau_joelle_2003_3.pdf)
+
+
+Usage
+-----
+
+For trying out piglet_pbvi I recommend downloading the [Tiger
+POMDP](http://www.pomdp.org/examples/tiger.aaai.POMDP).
+
+```python
+# Let Python know where to find the module, because I haven't made an
+# installable package.
+import sys
+sys.path.insert(0, <path to piglet_pbvi repo clone>)
+
+from piglet_pbvi import json_pomdp
+
+pbvi_gen = json_pomdp.load_pomdp("<path to tiger.aaai.POMDP>")
+for __ in xrange(10):
+    print next(pbvi_gen)
+    # Outputs current value function estimate and optimal policy for that value
+    # function.
+```
+
+You can also run in a shell:
+
+```bash
+$ cd <path to piglet_pbvi repo clone>
+$ mkdir pomdp_defs
+$ wget --directory-prefix=pomdp_defs http://www.pomdp.org/examples/tiger.aaai.POMDP
+$ python2.7 piglet_pomdp/json_pomdp.py pomdp_defs/tiger.aaai.POMDP
+```
+
+You can also have a look at [pomdp_play.py](pomdp_play.py). It's messy, but it
+runs piglet_pbvi and naive piglet_pbvi on an adaptation ofkthe POMDP defined in
+[AIMA](http://aima.cs.berkeley.edu/).
+
+I will add more documentation after I've made sure that piglet_pbvi works
+correctly.
 
 
 Done
 ----
 
-- Implement [PBVI](pbvi.py).
-- Implement a [naive version](naive_pbvi.py) that is slower, but easier to read.
+- Implement [PBVI](piglet_pbvi/pbvi.py).
+- Implement a [naive version](piglet_pbvi/naive_pbvi.py) that is slower, but
+  easier to read.
 - [Test](pomdp_play.py) them on a two-state problem from AIMA. Compare value
   function with AIMA. – Looks good.
-- [Test](pomdp_test.py) it on the [Tiger95](http://www.pomdp.org/examples/)
-  POMDP. Compare value function with the result of
+- Test it on the [Tiger95](http://www.pomdp.org/examples/) POMDP. Compare value
+  function with the result of
   [pomdp-solve](http://www.pomdp.org/code/index.html). – Looks okay. pomdp-solve
   returns a value function with more segments, but the policy is the same, I
   think.
@@ -42,6 +81,7 @@ To do
   in my implementation or performance problems.
 - Fix any defects or performance problems.
 - Turn this into a Python package and upload to PyPi.
+  - Convert README to reStructuredText.
 
 
 Why?

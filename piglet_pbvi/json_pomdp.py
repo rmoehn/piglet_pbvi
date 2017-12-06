@@ -2,6 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 import json
+import sys
 
 import numpy as np
 
@@ -38,7 +39,7 @@ def load_pomdp(pomdp_json_path):
 
 # Run an example
 if __name__ == '__main__':
-    pbvi_gen = load_pomdp("pomdp_defs/tiger.95.POMDP.json")
+    pbvi_gen = load_pomdp(sys.argv[1])
 
     for _ in xrange(10):
         print next(pbvi_gen)

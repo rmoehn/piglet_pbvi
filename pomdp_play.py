@@ -8,6 +8,10 @@ import numpy as np
 import pbvi
 import naive_pbvi
 
+# POMDP definition adapted from:
+# Stuart Russell, Peter Norvig. Artificial Intelligence: A Modern Approach. 3rd
+# ed., 2010.
+
 #                s0   s1
 cT = np.array([[            # s0
                 [0.9, 0.1],     # as
