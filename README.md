@@ -5,11 +5,10 @@ Point-based value iteration (PBVI) is an approximate method for solving
 partially observable Markov decision processes (POMDPs). I'm implementing the
 algorithm from:
 
-<a name="#pbvi-article">
+<a name="pbvi-article"></a>
 [Joelle Pineau, Geoffrey Gordon, Sebastian Thrun. Point-based value iteration:
 An anytime algorithm for POMDPs. In IJCAI,
 2003.](https://www.ri.cmu.edu/pub_files/pub4/pineau_joelle_2003_3/pineau_joelle_2003_3.pdf)
-</a>
 
 
 Usage
