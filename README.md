@@ -15,7 +15,25 @@ Usage
 -----
 
 For trying out piglet_pbvi I recommend downloading the [Tiger
-POMDP](http://www.pomdp.org/examples/tiger.aaai.POMDP).
+POMDP](http://www.pomdp.org/examples/tiger.95.POMDP) and [converting it to
+JSON](https://github.com/rmoehn/pomdp2json).
+
+```bash
+# Prerequisites – See README of pomdp2json for details.
+$ git clone https://github.com/rmoehn/pomdp2json
+$ cd pomdp2json
+$ ./build.sh
+$ mkdir ../pomdp_defs
+$ wget --directory-prefix=../pomdp_defs http://www.pomdp.org/examples/tiger.95.POMDP
+$ python2.7 pomdp2json.py ../pomdp_defs/tiger.95.POMDP ../pomdp_defs/tiger.95.POMDP.json
+$ cd ..
+
+$ git clone https://github.com/rmoehn/piglet_pbvi
+$ cd piglet_pbvi
+$ python2.7 piglet_pbvi/json_pomdp.py ../pomdp_defs/tiger.95.POMDP.json
+```
+
+You can do the last step in Python as well:
 
 ```python
 # Let Python know where to find the module, because I haven't made an
@@ -25,28 +43,28 @@ sys.path.insert(0, <path to piglet_pbvi repo clone>)
 
 from piglet_pbvi import json_pomdp
 
-pbvi_gen = json_pomdp.load_pomdp("<path to tiger.aaai.POMDP>")
+pbvi_gen = json_pomdp.load_pomdp("<path to tiger.95.POMDP.json>")
 for __ in xrange(10):
     print next(pbvi_gen)
     # Outputs current value function estimate and optimal policy for that value
     # function.
 ```
 
-You can also run in a shell:
-
-```bash
-$ cd <path to piglet_pbvi repo clone>
-$ mkdir pomdp_defs
-$ wget --directory-prefix=pomdp_defs http://www.pomdp.org/examples/tiger.aaai.POMDP
-$ python2.7 piglet_pomdp/json_pomdp.py pomdp_defs/tiger.aaai.POMDP
-```
-
-You can also have a look at [pomdp_play.py](pomdp_play.py). It's messy, but it
-runs piglet_pbvi and naive piglet_pbvi on an adaptation ofkthe POMDP defined in
+You might also have a look at [pomdp_play.py](pomdp_play.py). It's messy, but it
+runs piglet_pbvi and naive piglet_pbvi on an adaptation of the POMDP defined in
 [AIMA](http://aima.cs.berkeley.edu/).
 
 I will add more documentation after I've made sure that piglet_pbvi works
 correctly.
+
+
+Disclaimer
+----------
+
+The implementation is far from mature. It probably has bugs and consists mostly
+of undocumented NumPy oatmeal that I don't completely understand, even though
+I've written it. It might not work for anything but the Tiger and AIMA POMDPs
+mentioned above.
 
 
 Done
