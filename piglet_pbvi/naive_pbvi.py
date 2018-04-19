@@ -1,3 +1,9 @@
+"""Implementation of PBVI that emphasizes readibility over speed.
+
+The interface of :class:`NaivePBVI` is be the same as that of
+:class:`pbvi.PBVI`.
+"""
+
 import collections
 
 import numpy as np

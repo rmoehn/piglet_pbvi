@@ -1,4 +1,7 @@
 # -*- encoding: utf-8 -*-
+"""Run pbvi and naive_pbvi on a POMDP defined in AIMA."""
+
+# This is messy, because it's my scratch file.
 
 import matplotlib
 matplotlib.use('GTK3Agg')

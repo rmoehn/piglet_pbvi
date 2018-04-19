@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
-"""
-Point-based Value Iteration for POMDPs
+"""Point-based Value Iteration for POMDPs.
 
 An implementation of:
 
@@ -20,6 +19,7 @@ Naming conventions (incomplete and partially wrong)
 * Names of inputs are single letters or words not from the Greek alphabet.
 * Names of internal or intermediate result matrices are names of Greek letters,
   starting with a capital letter, shortened to their first four or five letters.
+* Explaining Python variable names with LaTeX: b_ → b', s_b_a → s'_{b, a}
 
 Examples:
 
