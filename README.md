@@ -1,6 +1,12 @@
 Implementation of Point-Based Value Iteration
 =============================================
 
+<a title="By Scanned and processed by Mariluna (Personal collection) [Public domain], via Wikimedia Commons"
+    href="https://commons.wikimedia.org/wiki/File:1988_CPA_5916.jpg">
+    <img width="30%" alt="Soviet stamp showing Piglet and Winnie-the-Pooh"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/1988_CPA_5916.jpg/512px-1988_CPA_5916.jpg">
+</a>
+
 Point-based value iteration (PBVI) is an approximate method for solving
 partially observable Markov decision processes (POMDPs). I'm implementing the
 algorithm from:
@@ -14,7 +20,7 @@ An anytime algorithm for POMDPs. In IJCAI,
 Usage
 -----
 
-For trying out piglet_pbvi I recommend downloading the [Tiger
+For trying out piglet_pbvi I recommend downloading the [Tiger (Tigger?)
 POMDP](http://www.pomdp.org/examples/tiger.95.POMDP) and [converting it to
 JSON](https://github.com/rmoehn/pomdp2json).
 
