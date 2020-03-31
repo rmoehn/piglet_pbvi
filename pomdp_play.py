@@ -4,12 +4,11 @@
 # This is messy, because it's my scratch file.
 
 import matplotlib
-matplotlib.use('GTK3Agg')
 from matplotlib import pyplot as plt
 import numpy as np
 
-import pbvi
-import naive_pbvi
+from piglet_pbvi import pbvi
+from piglet_pbvi import naive_pbvi
 
 # POMDP definition adapted from:
 # Stuart Russell, Peter Norvig. Artificial Intelligence: A Modern Approach. 3rd
@@ -49,8 +48,10 @@ b1 = np.linspace(0.1, 0.9, 8)
 B = np.stack([1 - b1, b1], axis=-1)
 
 if __name__ == '__main__':
-    V = pbvi.run(apbvi, V, B, 5, 4)
+    pbvi_gen = pbvi.generator(apbvi, V, B, 4)
     fig, ax = plt.subplots()
+    for __ in xrange(5):
+        V, __ = next(pbvi_gen)
     for v in V:
         ax.plot([0, 1], v)
     plt.show()
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     anpbvi = naive_pbvi.NaivePBVI(cT, cOmega, cR, gamma)
     nB = np.array([[0.7, 0.3]])
 
-    for _ in xrange(0):
+    for _ in xrange(4):
         nB = anpbvi.expanded_B(nB)
         print nB
 
